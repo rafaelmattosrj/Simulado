@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
 import br.com.rafaelmattos.StarWarsAPI.repository.PlanetRepository;
+import br.com.rafaelmattos.StarWarsAPI.service.exceptions.ObjectNotFoundException;
 
 @Service
 public class PlanetService {
@@ -16,6 +17,7 @@ public class PlanetService {
 
 	public Planet find(Integer id) {
 		Optional<Planet> obj = repo.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
+				"Object not found! Id: " + id + ", Tipo: " + Planet.class.getName()));
 	}
 }

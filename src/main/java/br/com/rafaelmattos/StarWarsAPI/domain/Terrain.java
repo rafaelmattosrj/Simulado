@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Terrain implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -21,6 +23,7 @@ public class Terrain implements Serializable {
 	private Integer id;
 	private String name;
 	
+	@JsonBackReference
 	@ManyToMany
 	@JoinTable(name = "TERRAIN_PLANET", 
 		joinColumns = @JoinColumn(name = "terrain_id"), 
