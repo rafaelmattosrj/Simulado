@@ -8,32 +8,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
-public class Planet implements Serializable {
+public class Terrain implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
-	private String movieAppearances;
 	
-	@ManyToMany(mappedBy = "planets")
-	private List<Climate> climates = new ArrayList<>();
+	@ManyToMany
+	@JoinTable(name = "TERRAIN_PLANET", 
+		joinColumns = @JoinColumn(name = "terrain_id"), 
+		inverseJoinColumns = @JoinColumn(name = "planet_id"))
+	private List<Planet> planets = new ArrayList<>(); 
 	
-	@ManyToMany(mappedBy = "planets")
-	private List<Terrain> terrains = new ArrayList<>();
-			
-	public Planet() {
+	public Terrain() {
 	}
 
-	public Planet(Integer id, String name, String movieAppearances) {
+	public Terrain(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.movieAppearances = movieAppearances;
 	}
 
 	public Integer getId() {
@@ -51,29 +51,13 @@ public class Planet implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getMovieAppearances() {
-		return movieAppearances;
-	}
-
-	public void setMovieAppearances(String movieAppearances) {
-		this.movieAppearances = movieAppearances;
-	}
-
-	public List<Climate> getClimates() {
-		return climates;
-	}
-
-	public void setClimates(List<Climate> climates) {
-		this.climates = climates;
-	}
 	
-	public List<Terrain> getTerrains() {
-		return terrains;
+	public List<Planet> getPlanets() {
+		return planets;
 	}
 
-	public void setTerrains(List<Terrain> terrains) {
-		this.terrains = terrains;
+	public void setPlanets(List<Planet> planets) {
+		this.planets = planets;
 	}
 
 	@Override
@@ -92,7 +76,7 @@ public class Planet implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Planet other = (Planet) obj;
+		Terrain other = (Terrain) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -100,6 +84,5 @@ public class Planet implements Serializable {
 			return false;
 		return true;
 	}
-		
+	
 }
-
