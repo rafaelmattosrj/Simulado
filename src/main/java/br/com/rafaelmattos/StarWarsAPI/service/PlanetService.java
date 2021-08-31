@@ -20,4 +20,10 @@ public class PlanetService {
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Object not found! Id: " + id + ", Tipo: " + Planet.class.getName()));
 	}
+	
+	public Planet insert(Planet obj) {
+		obj.setId(null);
+		return repo.save(obj);
+	}
+	
 }
