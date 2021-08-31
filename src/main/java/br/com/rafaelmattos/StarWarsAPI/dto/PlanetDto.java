@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 import br.com.rafaelmattos.StarWarsAPI.domain.Climate;
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
 import br.com.rafaelmattos.StarWarsAPI.domain.Terrain;
@@ -12,6 +16,9 @@ public class PlanetDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
+	
+	@NotEmpty (message = "Required completion")
+	@Length (min = 5, max = 80, message = "Length must be between 5 and 80 characters")
 	private String name;
 	private String movieAppearances;
 	private List<Climate> climates = new ArrayList<>();

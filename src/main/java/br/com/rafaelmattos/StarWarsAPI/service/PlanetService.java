@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
+import br.com.rafaelmattos.StarWarsAPI.dto.PlanetDto;
 import br.com.rafaelmattos.StarWarsAPI.repository.PlanetRepository;
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.DataIntegrityException;
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.ObjectNotFoundException;
@@ -55,4 +56,9 @@ public class PlanetService {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
 	}
+	
+	public Planet fromDTO(PlanetDto objDto) {
+		return new Planet(objDto.getId(), objDto.getName(), objDto.getMovieAppearances());
+	}
+	
 }

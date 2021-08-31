@@ -43,26 +43,62 @@ public class StarWarsApiApplication implements CommandLineRunner {
 
 		Climate c1 = new Climate(null, "arid");
 		Climate c2 = new Climate(null, "temperate");
+		Climate c3 = new Climate(null, "tropical");
+		Climate c4 = new Climate(null, "frozen");
+		Climate c5 = new Climate(null, "murky");
 		
 		Terrain t1 = new Terrain(null, "desert");
 		Terrain t2 = new Terrain(null, "grasslands");
 		Terrain t3 = new Terrain(null, "mountains");
+		Terrain t4 = new Terrain(null, "jungle");
+		Terrain t5 = new Terrain(null, "rainforests");
+		Terrain t6 = new Terrain(null, "tundra");
+		Terrain t7 = new Terrain(null, "ice caves");
+		Terrain t8 = new Terrain(null, "mountain ranges");
+		Terrain t9 = new Terrain(null, "swamp");
+		Terrain t10 = new Terrain(null, "jungles");
+		Terrain t11 = new Terrain(null, "gas giant");
+		Terrain t12 = new Terrain(null, "forests");
+		Terrain t13 = new Terrain(null, "lakes");
 
-		pla1.getTerrains().addAll(Arrays.asList(t1));
-		pla2.getTerrains().addAll(Arrays.asList(t2, t3));
-		
 		pla1.getClimates().addAll(Arrays.asList(c1));
 		pla2.getClimates().addAll(Arrays.asList(c2));
-
+		pla3.getClimates().addAll(Arrays.asList(c2, c3));
+		pla4.getClimates().addAll(Arrays.asList(c4));
+		pla5.getClimates().addAll(Arrays.asList(c5));
+		pla6.getClimates().addAll(Arrays.asList(c2));
+		pla7.getClimates().addAll(Arrays.asList(c2));
+		
+		pla1.getTerrains().addAll(Arrays.asList(t1));
+		pla2.getTerrains().addAll(Arrays.asList(t2, t3));
+		pla3.getTerrains().addAll(Arrays.asList(t4, t5));
+		pla4.getTerrains().addAll(Arrays.asList(t6, t7, t8));
+		pla5.getTerrains().addAll(Arrays.asList(t9, t10));
+		pla6.getTerrains().addAll(Arrays.asList(t11));
+		pla7.getTerrains().addAll(Arrays.asList(t12, t3, t13));
+		
 		c1.getPlanets().addAll(Arrays.asList(pla1));
-		c2.getPlanets().addAll(Arrays.asList(pla2));
+		c2.getPlanets().addAll(Arrays.asList(pla2, pla3, pla6, pla7));
+		c3.getPlanets().addAll(Arrays.asList(pla3));
+		c4.getPlanets().addAll(Arrays.asList(pla4));
+		c5.getPlanets().addAll(Arrays.asList(pla5));
 		
 		t1.getPlanets().addAll(Arrays.asList(pla1));
 		t2.getPlanets().addAll(Arrays.asList(pla2));
-		t3.getPlanets().addAll(Arrays.asList(pla2));
+		t3.getPlanets().addAll(Arrays.asList(pla2, pla7));
+		t4.getPlanets().addAll(Arrays.asList(pla3));
+		t5.getPlanets().addAll(Arrays.asList(pla3));
+		t6.getPlanets().addAll(Arrays.asList(pla4));
+		t7.getPlanets().addAll(Arrays.asList(pla4));
+		t8.getPlanets().addAll(Arrays.asList(pla4));
+		t9.getPlanets().addAll(Arrays.asList(pla5));
+		t10.getPlanets().addAll(Arrays.asList(pla5));
+		t11.getPlanets().addAll(Arrays.asList(pla6));
+		t12.getPlanets().addAll(Arrays.asList(pla7));
+		t13.getPlanets().addAll(Arrays.asList(pla7));
 
 		planetRepository.saveAll(Arrays.asList(pla1, pla2, pla3, pla4, pla5, pla6, pla7));
-		climateRepository.saveAll(Arrays.asList(c1, c2));
-		terrainRepository.saveAll(Arrays.asList(t1, t2, t3));
+		climateRepository.saveAll(Arrays.asList(c1, c2, c3, c4, c5));
+		terrainRepository.saveAll(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13));
 	}
 } 

@@ -11,7 +11,7 @@ import br.com.rafaelmattos.StarWarsAPI.service.exceptions.DataIntegrityException
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
-public class ResourceExceptionHandler {
+public class ControllerExceptionHandler {
 
 	@ExceptionHandler(ObjectNotFoundException.class)
 	public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request) {
