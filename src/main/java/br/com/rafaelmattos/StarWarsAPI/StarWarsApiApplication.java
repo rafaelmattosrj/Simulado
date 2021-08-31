@@ -35,6 +35,11 @@ public class StarWarsApiApplication implements CommandLineRunner {
 
 		Planet pla1 = new Planet(null, "Tatooine", "6");
 		Planet pla2 = new Planet(null, "Alderaan", "2");
+		Planet pla3 = new Planet(null, "Yavin IV", "1");
+		Planet pla4 = new Planet(null, "Hoth", "1");
+		Planet pla5 = new Planet(null, "Dagobah", "3");
+		Planet pla6 = new Planet(null, "Bespin", "1");
+		Planet pla7 = new Planet(null, "Endor", "1");
 
 		Climate c1 = new Climate(null, "arid");
 		Climate c2 = new Climate(null, "temperate");
@@ -56,7 +61,7 @@ public class StarWarsApiApplication implements CommandLineRunner {
 		t2.getPlanets().addAll(Arrays.asList(pla2));
 		t3.getPlanets().addAll(Arrays.asList(pla2));
 
-		planetRepository.saveAll(Arrays.asList(pla1, pla2));
+		planetRepository.saveAll(Arrays.asList(pla1, pla2, pla3, pla4, pla5, pla6, pla7));
 		climateRepository.saveAll(Arrays.asList(c1, c2));
 		terrainRepository.saveAll(Arrays.asList(t1, t2, t3));
 	}

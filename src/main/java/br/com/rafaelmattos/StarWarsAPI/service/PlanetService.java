@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
@@ -18,10 +21,6 @@ public class PlanetService {
 	@Autowired
 	private PlanetRepository repo;
 
-	public List<Planet> findAll() {
-		return repo.findAll();
-	}
-	
 	public Planet find(Integer id) {
 		Optional<Planet> obj = repo.findById(id);
 		return obj.orElseThrow(
@@ -46,5 +45,14 @@ public class PlanetService {
 		catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("It is not possible to delete a planet that has listed attributes.");
 		}
+	}
+	
+	public List<Planet> findAll() {
+		return repo.findAll();
+	}
+	
+	public Page<Planet> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return repo.findAll(pageRequest);
 	}
 }
