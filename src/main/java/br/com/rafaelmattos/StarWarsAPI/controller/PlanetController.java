@@ -1,6 +1,8 @@
 package br.com.rafaelmattos.StarWarsAPI.controller;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
+import br.com.rafaelmattos.StarWarsAPI.dto.PlanetDto;
 import br.com.rafaelmattos.StarWarsAPI.service.PlanetService;
 
 @RestController
@@ -20,7 +23,15 @@ public class PlanetController {
 
 		@Autowired
 		private PlanetService service;
-
+		
+		@RequestMapping(method=RequestMethod.GET)
+		public ResponseEntity<List<PlanetDto>> findAll() {
+			List<Planet> list = service.findAll();
+			List<PlanetDto> listDto = list.stream().map(obj -> new PlanetDto(obj)).collect(Collectors.toList());  
+			return ResponseEntity.ok().body(listDto);
+		}
+		
+		
 		@RequestMapping(value="/{id}", method=RequestMethod.GET)
 		public ResponseEntity<Planet> find(@PathVariable Integer id) {
 			Planet obj = service.find(id);

@@ -1,5 +1,6 @@
 package br.com.rafaelmattos.StarWarsAPI.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ public class PlanetService {
 	@Autowired
 	private PlanetRepository repo;
 
+	public List<Planet> findAll() {
+		return repo.findAll();
+	}
+	
 	public Planet find(Integer id) {
 		Optional<Planet> obj = repo.findById(id);
 		return obj.orElseThrow(
@@ -39,7 +44,7 @@ public class PlanetService {
 			repo.deleteById(id);
 		}
 		catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("It is not possible to delete a planet that has listed attributes");
+			throw new DataIntegrityException("It is not possible to delete a planet that has listed attributes.");
 		}
 	}
 }
