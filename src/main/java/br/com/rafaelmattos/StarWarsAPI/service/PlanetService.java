@@ -25,5 +25,10 @@ public class PlanetService {
 		obj.setId(null);
 		return repo.save(obj);
 	}
+
+	public Planet update(Planet obj) {
+		find(obj.getId());
+		return repo.save(obj);
+	}
 	
 }
