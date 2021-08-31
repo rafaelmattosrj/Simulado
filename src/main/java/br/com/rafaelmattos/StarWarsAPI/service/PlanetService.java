@@ -34,8 +34,13 @@ public class PlanetService {
 	}
 
 	public Planet update(Planet obj) {
-		find(obj.getId());
-		return repo.save(obj);
+		Planet newObj = find(obj.getId());
+		updateData(newObj, obj);
+		return repo.save(newObj);
+	}
+
+	private void updateData(Planet newObj, Planet obj) {
+		newObj.setName(obj.getName());
 	}
 
 	public void delete(Integer id) {
@@ -44,7 +49,7 @@ public class PlanetService {
 			repo.deleteById(id);
 		}
 		catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("It is not possible to delete a planet that has listed attributes.");
+			throw new DataIntegrityException("Cannot delete because there are related entities.");
 		}
 	}
 	

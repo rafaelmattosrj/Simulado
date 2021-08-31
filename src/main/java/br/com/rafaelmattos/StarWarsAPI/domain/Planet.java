@@ -67,7 +67,7 @@ public class Planet implements Serializable {
 	public void setClimates(List<Climate> climates) {
 		this.climates = climates;
 	}
-	
+
 	public List<Terrain> getTerrains() {
 		return terrains;
 	}
