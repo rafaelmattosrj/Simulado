@@ -9,10 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
-import br.com.rafaelmattos.StarWarsAPI.dto.PlanetDto;
+import br.com.rafaelmattos.StarWarsAPI.dto.PlanetRequest;
+import br.com.rafaelmattos.StarWarsAPI.dto.PlanetResponse;
+import br.com.rafaelmattos.StarWarsAPI.repository.ClimateRepository;
 import br.com.rafaelmattos.StarWarsAPI.repository.PlanetRepository;
+import br.com.rafaelmattos.StarWarsAPI.repository.TerrainRepository;
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.DataIntegrityException;
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.ObjectNotFoundException;
 
@@ -20,33 +24,39 @@ import br.com.rafaelmattos.StarWarsAPI.service.exceptions.ObjectNotFoundExceptio
 public class PlanetService {
 
 	@Autowired
-	private PlanetRepository repo;
-
+	private PlanetRepository planetRepository;
+	
+	@Autowired
+	private ClimateRepository climateRepository;
+	
+	@Autowired
+	private TerrainRepository terrainRepository;
+	
 	public Planet find(Integer id) {
-		Optional<Planet> obj = repo.findById(id);
-		return obj.orElseThrow(
+		Optional<Planet> planet = planetRepository.findById(id);
+		return planet.orElseThrow(
 				() -> new ObjectNotFoundException("Planet not found! Id: " + id + ", Tipo: " + Planet.class.getName()));
 	}
 
-	public Planet insert(Planet obj) {
-		obj.setId(null);
-		return repo.save(obj);
+	@Transactional
+	public Planet insert(Planet planet) {
+		planet.setId(null);
+		planet = planetRepository.save(planet);
+		climateRepository.saveAll(planet.getClimates());
+		terrainRepository.saveAll(planet.getTerrains());
+		return planet;
 	}
 
-	public Planet update(Planet obj) {
-		Planet newObj = find(obj.getId());
-		updateData(newObj, obj);
-		return repo.save(newObj);
-	}
-
-	private void updateData(Planet newObj, Planet obj) {
-		newObj.setName(obj.getName());
+	public Planet update(Planet planet) {
+		Planet newObject = find(planet.getId());
+		updateData(newObject, planet);
+		return planetRepository.save(newObject);
 	}
 
 	public void delete(Integer id) {
 		find(id);
 		try {
-			repo.deleteById(id);
+			planetRepository.deleteById(id);
 		}
 		catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Cannot delete because there are related entities.");
@@ -54,16 +64,41 @@ public class PlanetService {
 	}
 	
 	public List<Planet> findAll() {
-		return repo.findAll();
+		return planetRepository.findAll();
 	}
 	
 	public Page<Planet> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return repo.findAll(pageRequest);
+		return planetRepository.findAll(pageRequest);
 	}
 	
-	public Planet fromDTO(PlanetDto objDto) {
-		return new Planet(objDto.getId(), objDto.getName(), objDto.getMovieAppearances());
+	public Planet fromDTO(PlanetResponse planetResponse) {
+		return new Planet(
+				planetResponse.getId(), 
+				planetResponse.getName(), 
+				planetResponse.getMovieAppearances());
+	}
+	
+	public Planet fromDTO(PlanetRequest planetRequest) {
+		Planet planet = new Planet(null, planetRequest.getName(), null);
+		
+//		planet.getClimates().add(planetRequest.getClimate1());
+//		if (planetRequest.getClimate2()!=null) {
+//			planet.getClimates().add(planetRequest.getClimate2());
+//		}
+//		if (planetRequest.getClimate3()!=null) {
+//			planet.getClimates().add(planetRequest.getClimate3());
+//			return planet;
+//		}
+//		planet.getTerrains().add(null);
+		return planet;
+	}
+	
+	private void updateData(Planet newObject, Planet planet) {
+		newObject.setName(planet.getName());
+		newObject.setMovieAppearances(planet.getMovieAppearances());
+		newObject.setClimates(planet.getClimates());
+		newObject.setTerrains(planet.getTerrains());
 	}
 	
 }

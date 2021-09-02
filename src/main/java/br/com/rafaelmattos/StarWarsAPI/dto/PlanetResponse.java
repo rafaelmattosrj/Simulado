@@ -12,7 +12,7 @@ import br.com.rafaelmattos.StarWarsAPI.domain.Climate;
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
 import br.com.rafaelmattos.StarWarsAPI.domain.Terrain;
 
-public class PlanetDto implements Serializable {
+public class PlanetResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
@@ -24,15 +24,15 @@ public class PlanetDto implements Serializable {
 	private List<Climate> climates = new ArrayList<>();
 	private List<Terrain> terrains = new ArrayList<>();
 
-	public PlanetDto() {
+	public PlanetResponse() {
 	}
 
-	public PlanetDto(Planet obj) {
-			id = obj.getId();
-			name = obj.getName();
-			movieAppearances = obj.getMovieAppearances();
-			climates = obj.getClimates();
-			terrains = obj.getTerrains();
+	public PlanetResponse(Planet planet) {
+			id = planet.getId();
+			name = planet.getName();
+			movieAppearances = planet.getMovieAppearances();
+			climates = planet.getClimates();
+			terrains = planet.getTerrains();
 		}
 	
 	public Integer getId() {
