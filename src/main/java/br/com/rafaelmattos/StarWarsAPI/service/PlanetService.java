@@ -3,6 +3,8 @@ package br.com.rafaelmattos.StarWarsAPI.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -13,23 +15,21 @@ import org.springframework.stereotype.Service;
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
 import br.com.rafaelmattos.StarWarsAPI.dto.PlanetRequest;
 import br.com.rafaelmattos.StarWarsAPI.dto.PlanetResponse;
-import br.com.rafaelmattos.StarWarsAPI.repository.ClimateRepository;
 import br.com.rafaelmattos.StarWarsAPI.repository.PlanetRepository;
-import br.com.rafaelmattos.StarWarsAPI.repository.TerrainRepository;
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.DataIntegrityException;
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.ObjectNotFoundException;
 
 @Service
 public class PlanetService {
 
+//	@Autowired
+//	private ClimateRepository climateRepository;
+//
+//	@Autowired
+//	private TerrainRepository terrainRepository;
+	
 	@Autowired
 	private PlanetRepository planetRepository;
-
-	@Autowired
-	private ClimateRepository climateRepository;
-
-	@Autowired
-	private TerrainRepository terrainRepository;
 
 	public Planet find(Integer id) {
 		Optional<Planet> planet = planetRepository.findById(id);
@@ -37,26 +37,18 @@ public class PlanetService {
 				() -> new ObjectNotFoundException("Planet not found! Id: " + id + ", Tipo: " + Planet.class.getName()));
 	}
 	
-	//da erro na implementação de cima.
-//	public Planet findByName(String name) {
-//		Optional<Planet> planet = planetRepository.findByName(name);
-//		return planet.orElseThrow(
-//				() -> new ObjectNotFoundException("Planet not found! Id: " + name + ", Tipo: " + Planet.class.getName()));
-//	}
-
-//		if (planet == null) {
-//			throw new ObjectNotFoundException(
-//					"Planet not found! Name: " + name + ", Tipo: " + Planet.class.getName());
-//		}
-//		return planet;
-
+	public Planet findByName(String name) {
+		Optional<Planet> planet = planetRepository.findByName(name);
+		return planet.orElseThrow(
+				() -> new ObjectNotFoundException("Planet not found! Id: " + name + ", Tipo: " + Planet.class.getName()));
+	}
 	
-	//@Transactional
+	@Transactional
 	public Planet insert(Planet planet) {
 		planet.setId(null);
 		planet = planetRepository.save(planet);
-		climateRepository.saveAll(planet.getClimates());
-		terrainRepository.saveAll(planet.getTerrains());
+//		climateRepository.saveAll(planet.getClimates());
+//		terrainRepository.saveAll(planet.getTerrains());
 		return planet;
 	}
 

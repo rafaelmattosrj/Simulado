@@ -39,13 +39,12 @@ public class PlanetController {
 			return ResponseEntity.ok().body(planet);
 	}
 		
-		//Com essa implementação da erro na get/{id} de cima.
-//		@ApiOperation(value="Search by name")
-//		@RequestMapping(value="/{name}", method=RequestMethod.GET)
-//		public ResponseEntity<PlanetResponse> findByName(@PathVariable String name) {
-//			PlanetResponse planetResponse = planetService.findByName(name);
-//			return ResponseEntity.ok().body(planetResponse);
-//		}
+		@ApiOperation(value="Search by name")
+		@RequestMapping(value="name/{name}", method=RequestMethod.GET)
+		public ResponseEntity<Planet> findByName(@PathVariable String name) {
+			Planet planet = planetService.findByName(name);
+			return ResponseEntity.ok().body(planet);
+		}
 		
 		@ApiOperation(value="Insert planet")
 		@RequestMapping(method=RequestMethod.POST)
