@@ -11,12 +11,15 @@ public class PlanetRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
+//	private String climates;
+//	private String terrains;
 	private List<Climate> climates = new ArrayList<>();
 	private List<Terrain> terrains = new ArrayList<>();
 
 	public PlanetRequest() {
 	}
 
+	
 	public String getName() {
 		return name;
 	}
@@ -25,20 +28,43 @@ public class PlanetRequest implements Serializable {
 		this.name = name;
 	}
 
+
 	public List<Climate> getClimates() {
 		return climates;
 	}
+
 
 	public void setClimates(List<Climate> climates) {
 		this.climates = climates;
 	}
 
+
 	public List<Terrain> getTerrains() {
 		return terrains;
 	}
 
+
 	public void setTerrains(List<Terrain> terrains) {
 		this.terrains = terrains;
 	}
+
+//	public String getClimates() {
+//		return climates;
+//	}
+//
+//	public void setClimates(String climates) {
+//		this.climates = climates;
+//	}
+//
+//	public String getTerrains() {
+//		return terrains;
+//	}
+//
+//	public void setTerrains(String terrains) {
+//		this.terrains = terrains;
+//	}
+	
+	
+
 
 }

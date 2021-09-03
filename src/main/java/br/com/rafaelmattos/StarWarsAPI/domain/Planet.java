@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class Planet implements Serializable {
@@ -20,17 +19,17 @@ public class Planet implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotNull
+//	@NotNull
 	private String name;
 	
-	@NotNull
+//	@NotNull
 	private String movieAppearances;
 	
-	@NotNull
+//	@NotNull
 	@ManyToMany(mappedBy = "planets", cascade=CascadeType.PERSIST)
 	private List<Climate> climates = new ArrayList<>();
 	
-	@NotNull
+//	@NotNull
 	@ManyToMany(mappedBy = "planets", cascade=CascadeType.PERSIST)
 	private List<Terrain> terrains = new ArrayList<>();
 			

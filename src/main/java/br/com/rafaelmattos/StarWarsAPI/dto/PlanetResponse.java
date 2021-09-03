@@ -1,7 +1,6 @@
 package br.com.rafaelmattos.StarWarsAPI.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
@@ -16,25 +15,25 @@ public class PlanetResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	
-	@NotEmpty (message = "Required completion")
-	@Length (min = 5, max = 80, message = "Length must be between 5 and 80 characters")
+
+	@NotEmpty(message = "Required completion")
+	@Length(min = 5, max = 80, message = "Length must be between 5 and 80 characters")
 	private String name;
 	private String movieAppearances;
-	private List<Climate> climates = new ArrayList<>();
-	private List<Terrain> terrains = new ArrayList<>();
+	private List<Climate> climates;
+	private List<Terrain> terrains;
 
 	public PlanetResponse() {
 	}
 
 	public PlanetResponse(Planet planet) {
-			id = planet.getId();
-			name = planet.getName();
-			movieAppearances = planet.getMovieAppearances();
-			climates = planet.getClimates();
-			terrains = planet.getTerrains();
-		}
-	
+		id = planet.getId();
+		name = planet.getName();
+		movieAppearances = planet.getMovieAppearances();
+		climates = planet.getClimates();
+		terrains = planet.getTerrains();
+	}
+
 	public Integer getId() {
 		return id;
 	}

@@ -21,57 +21,77 @@ import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
 import br.com.rafaelmattos.StarWarsAPI.dto.PlanetRequest;
 import br.com.rafaelmattos.StarWarsAPI.dto.PlanetResponse;
 import br.com.rafaelmattos.StarWarsAPI.service.PlanetService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value = "/planets")
 public class PlanetController {
 
 		@Autowired
-		private PlanetService service;
+		private PlanetService planetService;
 		
+		@ApiOperation(value="Search by id")
 		@RequestMapping(value="/{id}", method=RequestMethod.GET)
 		public ResponseEntity<Planet> find(@PathVariable Integer id) {
-			Planet planet = service.find(id);
+			Planet planet = planetService.find(id);
 			return ResponseEntity.ok().body(planet);
 	}
 		
+		//Com essa implementação da erro na get/{id} de cima.
+//		@ApiOperation(value="Search by name")
+//		@RequestMapping(value="/{name}", method=RequestMethod.GET)
+//		public ResponseEntity<PlanetResponse> findByName(@PathVariable String name) {
+//			PlanetResponse planetResponse = planetService.findByName(name);
+//			return ResponseEntity.ok().body(planetResponse);
+//		}
+		
+		@ApiOperation(value="Insert planet")
 		@RequestMapping(method=RequestMethod.POST)
 		public ResponseEntity<Void> insert(@Valid @RequestBody PlanetRequest planetRequest) {
-		Planet planet = service.fromDTO(planetRequest);
-		planet = service.insert(planet);
+		Planet planet = planetService.fromDTO(planetRequest);
+		planet = planetService.insert(planet);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 			.path("/{id}").buildAndExpand(planet.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 		
+		@ApiOperation(value="Update planet")
 		@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 		public ResponseEntity<Void> update(@Valid @RequestBody PlanetResponse planetResponse, @PathVariable Integer id) {
-			Planet planet = service.fromDTO(planetResponse);
+			Planet planet = planetService.fromDTO(planetResponse);
 			planet.setId(id);
-			planet = service.update(planet);
+			planet = planetService.update(planet);
 			return ResponseEntity.noContent().build();
 		}
 		
+		@ApiOperation(value="Remove planet")
+		@ApiResponses(value = {
+				@ApiResponse(code = 400, message = "Planets cannot be excluded because there are related entities"),
+				@ApiResponse(code = 404, message = "Non-existent code") })
 		@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 		public ResponseEntity<Void> delete(@PathVariable Integer id) {
-			service.delete(id);
+			planetService.delete(id);
 			return ResponseEntity.noContent().build();
 		}
 		
+		@ApiOperation(value="Return all planets")
 		@RequestMapping(method=RequestMethod.GET)
 		public ResponseEntity<List<PlanetResponse>> findAll() {
-			List<Planet> planet = service.findAll();
+			List<Planet> planet = planetService.findAll();
 			List<PlanetResponse> planetResponse = planet.stream().map(obj -> new PlanetResponse(obj)).collect(Collectors.toList());  
 			return ResponseEntity.ok().body(planetResponse);
 		}
 		
+		@ApiOperation(value="Return all planets with pagination")
 		@RequestMapping(value="/page", method=RequestMethod.GET)
 		public ResponseEntity<Page<PlanetResponse>> findPage(
 				@RequestParam(value="page", defaultValue="0") Integer page, 
 				@RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage, 
 				@RequestParam(value="orderBy", defaultValue="name") String orderBy, 
 				@RequestParam(value="direction", defaultValue="ASC") String direction) {
-			Page<Planet> planet = service.findPage(page, linesPerPage, orderBy, direction);
+			Page<Planet> planet = planetService.findPage(page, linesPerPage, orderBy, direction);
 			Page<PlanetResponse> planetResponse = planet.map(obj -> new PlanetResponse(obj));  
 			return ResponseEntity.ok().body(planetResponse);
 		}
