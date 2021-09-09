@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import br.com.rafaelmattos.StarWarsAPI.domain.Climate;
+import br.com.rafaelmattos.StarWarsAPI.domain.Terrain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -31,7 +33,7 @@ public class PlanetService {
 	@Autowired
 	private PlanetRepository planetRepository;
 
-	public Planet find(Integer id) {
+	public Planet findPlanet(Integer id) {
 		Optional<Planet> planet = planetRepository.findById(id);
 		return planet.orElseThrow(
 				() -> new ObjectNotFoundException("Planet not found! Id: " + id + ", Tipo: " + Planet.class.getName()));
@@ -46,20 +48,30 @@ public class PlanetService {
 	@Transactional
 	public Planet insert(Planet planet) {
 		planet.setId(null);
+		Climate climate = climateRepository.saveAll(planet.getClimates());
+		Terrain terrain = terrainRepository.saveAll(planet.getTerrains());
+
+		planet.setTerrains(terrain);
+		planet.setClimates(climate);
+
 		planet = planetRepository.save(planet);
-//		climateRepository.saveAll(planet.getClimates());
-//		terrainRepository.saveAll(planet.getTerrains());
+
 		return planet;
 	}
 
 	public Planet update(Planet planet) {
-		Planet newObject = find(planet.getId());
-		updateData(newObject, planet);
+		Planet existingObject = findPlanet(planet.getId());
+
+		existingObject.setName(planet.getName());
+		existingObject.setClimates(planet.getClimates());
+		existingObject.setTerrains(planet.getTerrains());
+
+		//updateData(existingObject, planet);
 		return planetRepository.save(newObject);
 	}
 
 	public void delete(Integer id) {
-		find(id);
+		findPlanet(id);
 		try {
 			planetRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
