@@ -31,20 +31,29 @@ public class PlanetService {
     @Autowired
     private TerrainRepository terrainRepository;
 
-    public Planet findPlanet(Integer id) {
+    public List<Planet> findAllPlanets() {
+        return planetRepository.findAll();
+    }
+    
+    public Page<Planet> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+        return planetRepository.findAll(pageRequest);
+    }
+    
+    public Planet findPlanetById(Integer id) {
         Optional<Planet> planet = planetRepository.findById(id);
         return planet.orElseThrow(
                 () -> new ObjectNotFoundException("Planet not found! Id: " + id + ", Tipo: " + Planet.class.getName()));
     }
 
-    public Planet findByName(String name) {
+    public Planet findPlanetByName(String name) {
         Optional<Planet> planet = planetRepository.findByName(name);
         return planet.orElseThrow(
                 () -> new ObjectNotFoundException("Planet not found! Id: " + name + ", Tipo: " + Planet.class.getName()));
     }
-
+    
     @Transactional
-    public Planet insert(Planet planet) {
+    public Planet createPlanet(Planet planet) {
 		List<Climate> climate = climateRepository.saveAll(planet.getClimates());
 		List<Terrain> terrain = terrainRepository.saveAll(planet.getTerrains());
 
@@ -57,8 +66,8 @@ public class PlanetService {
     }
 
 
-    public Planet update(Planet planet) {
-        Planet existingObject = findPlanet(planet.getId());
+    public Planet updatePlanet(Planet planet) {
+        Planet existingObject = findPlanetById(planet.getId());
 
         existingObject.setClimates(climateRepository.saveAll(planet.getClimates()));
         existingObject.setTerrains(terrainRepository.saveAll(planet.getTerrains()));
@@ -67,8 +76,8 @@ public class PlanetService {
         return planetRepository.save(existingObject);
     }
 
-    public void delete(Integer id) {
-        findPlanet(id);
+    public void deletePlanetById(Integer id) {
+        findPlanetById(id);
         try {
             planetRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
@@ -76,12 +85,4 @@ public class PlanetService {
         }
     }
 
-    public List<Planet> findAll() {
-        return planetRepository.findAll();
-    }
-
-    public Page<Planet> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        return planetRepository.findAll(pageRequest);
-    }
 }
