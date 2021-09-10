@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import br.com.rafaelmattos.StarWarsAPI.converter.PlanetConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.rafaelmattos.StarWarsAPI.converter.PlanetConverter;
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
 import br.com.rafaelmattos.StarWarsAPI.dto.PlanetRequest;
 import br.com.rafaelmattos.StarWarsAPI.dto.PlanetResponse;
@@ -48,6 +48,7 @@ public class PlanetController {
   
   @ApiOperation(value = "Return all planets with pagination")
   @RequestMapping(value = "/planets/page", method = RequestMethod.GET)
+	@ApiResponses(value = @ApiResponse(code = 404, message = "The list of planet is empty."))
   public ResponseEntity<Page<PlanetResponse>> findPlanetsPage(
           @RequestParam(value = "page", defaultValue = "0") Integer page,
           @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
@@ -76,7 +77,7 @@ public class PlanetController {
       return ResponseEntity.ok().body(planet);
   }
       
-  @ApiOperation(value = "Insert planet")
+  @ApiOperation(value = "Create planet")
   //TODO: Incluir path especificio para o planeta.
   @RequestMapping(path = "/planet", method = RequestMethod.POST)
   public ResponseEntity<Void> createPlanet(@Valid @RequestBody PlanetRequest planetRequest) {
@@ -92,16 +93,18 @@ public class PlanetController {
   @ApiOperation(value = "Update planet")
   @RequestMapping(path = "/planet/{id}", method = RequestMethod.PUT)
   public ResponseEntity<Void> updatePlanet(@Valid @RequestBody PlanetRequest planetRequest, @PathVariable Integer id) {
-      Planet planet = planetConverter.planetRequestToPlanet(planetRequest);
-      planet.setId(id);
+      
+	  Planet planet = planetConverter.planetRequestToPlanet(planetRequest);
+      
+	  planet.setId(id);
       planetService.updatePlanet(planet);
       return ResponseEntity.noContent().build();
   }
 
   @ApiOperation(value = "Remove planet")
   @ApiResponses(value = {
-          @ApiResponse(code = 400, message = "Planets cannot be excluded because there are related entities"),
-          @ApiResponse(code = 404, message = "Non-existent code")})
+		  @ApiResponse(code = 200, message = "Deleted Successfully."),
+          @ApiResponse(code = 400, message = "Planets cannot be excluded because there are related entities.")})
   @RequestMapping(value = "planet/{id}", method = RequestMethod.DELETE)
   public ResponseEntity<Void> deletePlanetById(@PathVariable Integer id) {
       planetService.deletePlanetById(id);
