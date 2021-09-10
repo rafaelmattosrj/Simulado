@@ -6,31 +6,51 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@Table(name = "planet")
 public class Planet implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	
-//	@NotNull
+
 	private String name;
-	
-//	@NotNull
+
 	private String movieAppearances;
-	
-//	@NotNull
-	@ManyToMany(mappedBy = "planets", cascade=CascadeType.PERSIST)
+
+
+	@ManyToMany(fetch = FetchType.LAZY,
+			cascade = {
+					CascadeType.PERSIST,
+					CascadeType.MERGE
+			})
+	@JoinTable(name = "planet_climates",
+			joinColumns = { @JoinColumn(name = "planet_id") },
+			inverseJoinColumns = { @JoinColumn(name = "climate_id") })
+	@JsonIgnore
 	private List<Climate> climates = new ArrayList<>();
-	
-//	@NotNull
-	@ManyToMany(mappedBy = "planets", cascade=CascadeType.PERSIST)
+
+	@ManyToMany(fetch = FetchType.LAZY,
+			cascade = {
+					CascadeType.PERSIST,
+					CascadeType.MERGE
+			})
+	@JoinTable(name = "planet_terrains",
+			joinColumns = { @JoinColumn(name = "planet_id") },
+			inverseJoinColumns = { @JoinColumn(name = "terrain_id") })
+	@JsonIgnore
 	private List<Terrain> terrains = new ArrayList<>();
 			
 	public Planet() {
@@ -109,4 +129,6 @@ public class Planet implements Serializable {
 	}
 		
 }
+
+
 

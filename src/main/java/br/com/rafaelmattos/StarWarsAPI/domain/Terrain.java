@@ -4,17 +4,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@Table(name = "terrain")
 public class Terrain implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -22,12 +24,14 @@ public class Terrain implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
-	
+
+	@ManyToMany(fetch = FetchType.LAZY,
+			cascade = {
+					CascadeType.PERSIST,
+					CascadeType.MERGE
+			},
+			mappedBy = "terrains")
 	@JsonIgnore
-	@ManyToMany
-	@JoinTable(name = "TERRAIN_PLANET", 
-		joinColumns = @JoinColumn(name = "terrain_id"), 
-		inverseJoinColumns = @JoinColumn(name = "planet_id"))
 	private List<Planet> planets = new ArrayList<>(); 
 	
 	public Terrain() {

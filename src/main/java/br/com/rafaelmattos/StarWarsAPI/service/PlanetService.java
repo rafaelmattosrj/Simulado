@@ -2,14 +2,9 @@ package br.com.rafaelmattos.StarWarsAPI.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 import javax.transaction.Transactional;
 
-import br.com.rafaelmattos.StarWarsAPI.domain.Climate;
-import br.com.rafaelmattos.StarWarsAPI.domain.Terrain;
-import br.com.rafaelmattos.StarWarsAPI.repository.ClimateRepository;
-import br.com.rafaelmattos.StarWarsAPI.repository.TerrainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -17,10 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import br.com.rafaelmattos.StarWarsAPI.domain.Climate;
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
-import br.com.rafaelmattos.StarWarsAPI.dto.PlanetRequest;
-import br.com.rafaelmattos.StarWarsAPI.dto.PlanetResponse;
+import br.com.rafaelmattos.StarWarsAPI.domain.Terrain;
+import br.com.rafaelmattos.StarWarsAPI.repository.ClimateRepository;
 import br.com.rafaelmattos.StarWarsAPI.repository.PlanetRepository;
+import br.com.rafaelmattos.StarWarsAPI.repository.TerrainRepository;
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.DataIntegrityException;
 import br.com.rafaelmattos.StarWarsAPI.service.exceptions.ObjectNotFoundException;
 
@@ -30,7 +27,7 @@ public class PlanetService {
     @Autowired
     private PlanetRepository planetRepository;
     @Autowired
-    private ClimateRepository climateRespository;
+    private ClimateRepository climateRepository;
     @Autowired
     private TerrainRepository terrainRepository;
 
@@ -48,21 +45,22 @@ public class PlanetService {
 
     @Transactional
     public Planet insert(Planet planet) {
-//		Climate climate = climateRepository.saveAll(planet.getClimates());
-//		Terrain terrain = terrainRepository.saveAll(planet.getTerrains());
-//
-//		planet.setTerrains(terrain);
-//		planet.setClimates(climate);
+		List<Climate> climate = climateRepository.saveAll(planet.getClimates());
+		List<Terrain> terrain = terrainRepository.saveAll(planet.getTerrains());
+
+		planet.setTerrains(terrain);
+		planet.setClimates(climate);
 
         planet = planetRepository.save(planet);
 
         return planet;
     }
 
+
     public Planet update(Planet planet) {
         Planet existingObject = findPlanet(planet.getId());
 
-        existingObject.setClimates(climateRespository.saveAll(planet.getClimates()));
+        existingObject.setClimates(climateRepository.saveAll(planet.getClimates()));
         existingObject.setTerrains(terrainRepository.saveAll(planet.getTerrains()));
         existingObject.setName(planet.getName());
 

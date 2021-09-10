@@ -42,7 +42,7 @@ public class PlanetController {
     @ApiOperation(value = "Search planet by id.")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     //TODO: Melhorar o nome do metodo
-    public ResponseEntity<Planet> find(@PathVariable Integer id) {
+    public ResponseEntity<Planet> findById(@PathVariable Integer id) {
         Planet planet = planetService.findPlanet(id);
         return ResponseEntity.ok().body(planet);
     }
