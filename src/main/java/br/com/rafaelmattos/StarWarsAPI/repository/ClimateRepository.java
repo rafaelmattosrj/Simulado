@@ -8,6 +8,4 @@ import br.com.rafaelmattos.StarWarsAPI.domain.Climate;
 @Repository
 public interface ClimateRepository extends JpaRepository<Climate, Integer> {
 
-//	List<Climate> findByNameIn(List<String> Climates);
-	
 }

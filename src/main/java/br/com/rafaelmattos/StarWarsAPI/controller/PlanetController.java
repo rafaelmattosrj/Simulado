@@ -61,8 +61,8 @@ public class PlanetController {
     @RequestMapping(path = "/planet", method = RequestMethod.POST)
     public ResponseEntity<Void> insert(@Valid @RequestBody PlanetRequest planetRequest) {
 
-
         Planet planet = planetConverter.planetRequestToPlanet(planetRequest);
+
         planet = planetService.insert(planet);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(planet.getId()).toUri();
@@ -70,15 +70,11 @@ public class PlanetController {
     }
 
     @ApiOperation(value = "Update planet")
-    //TODO: Incluir path especificio para o planeta.
-    //PUT você usa quando você quer alterar TODOS os dados do objeto.
-    //PATCH quando você deseja alterar um ou alguns dados do objeto.
-    @RequestMapping(path = "/planet", value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> update(@Valid @RequestBody PlanetResponse planetResponse, @PathVariable Integer id) {
-        //TODO: Alterar nome from DTO (ResponseToModel), criar um converter.
-        Planet planet = planetService.fromDTO(planetResponse);
+    @RequestMapping(path = "/planet/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> update(@Valid @RequestBody PlanetRequest planetRequest, @PathVariable Integer id) {
+        Planet planet = planetConverter.planetRequestToPlanet(planetRequest);
         planet.setId(id);
-        planet = planetService.update(planet);
+        planetService.update(planet);
         return ResponseEntity.noContent().build();
     }
 
