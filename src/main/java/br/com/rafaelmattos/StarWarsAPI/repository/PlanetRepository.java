@@ -16,8 +16,5 @@ public interface PlanetRepository extends JpaRepository<Planet, Integer> {
 	
 	@Transactional(readOnly = true)
 	Optional<Planet> findByName(String name);
-
 	
 }
-
-//aí vc vai xriar um planetclimateRepository.deleteById(idDoPlaneta)

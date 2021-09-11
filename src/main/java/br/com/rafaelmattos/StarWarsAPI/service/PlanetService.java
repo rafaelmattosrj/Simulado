@@ -64,6 +64,15 @@ public class PlanetService {
 
         return planet;
     }
+    
+//    public Planet createPlanet(Planet planet) {
+//		planet.setTerrains(terrainRepository.saveAll(planet.getTerrains());
+//		planet.setClimates(climateRepository.saveAll(planet.getClimates()));
+//
+//        planet = planetRepository.save(planet);
+//
+//        return planet;
+//    }
 
 
     public Planet updatePlanet(Planet planet) {

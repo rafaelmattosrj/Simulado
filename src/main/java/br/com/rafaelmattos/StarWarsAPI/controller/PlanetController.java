@@ -2,7 +2,7 @@ package br.com.rafaelmattos.StarWarsAPI.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.rafaelmattos.StarWarsAPI.converter.PlanetConverter;
 import br.com.rafaelmattos.StarWarsAPI.domain.Planet;
 import br.com.rafaelmattos.StarWarsAPI.dto.PlanetRequest;
 import br.com.rafaelmattos.StarWarsAPI.dto.PlanetResponse;
 import br.com.rafaelmattos.StarWarsAPI.service.PlanetService;
+import br.com.rafaelmattos.StarWarsAPI.utils.Converter;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -36,13 +36,13 @@ public class PlanetController {
   @Autowired
   private PlanetService planetService;
   @Autowired
-  private PlanetConverter planetConverter;
+  private Converter converter;
  
   @ApiOperation(value = "Return all planets")
   @RequestMapping(value = "planets",method = RequestMethod.GET)
-  public ResponseEntity<List<PlanetResponse>> findAllPlanets() {
-      List<Planet> planet = planetService.findAllPlanets();
-      List<PlanetResponse> planetResponse = planet.stream().map(obj -> new PlanetResponse(obj)).collect(Collectors.toList());
+  public ResponseEntity<Optional<List<PlanetResponse>>> findAllPlanets() {
+	  Optional<List<Planet>> planet = Optional.ofNullable(planetService.findAllPlanets());
+	  Optional<List<PlanetResponse>> planetResponse = Optional.ofNullable(converter.ToPlanetResponse(planet));
       return ResponseEntity.ok().body(planetResponse);
   }
   
@@ -55,7 +55,7 @@ public class PlanetController {
           @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
           @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
       Page<Planet> planet = planetService.findPage(page, linesPerPage, orderBy, direction);
-      Page<PlanetResponse> planetResponse = planet.map(obj -> new PlanetResponse(obj));
+      Page<PlanetResponse> planetResponse = converter.ToPlanetResponse(planet);
       return ResponseEntity.ok().body(planetResponse);
   }
   
@@ -63,18 +63,20 @@ public class PlanetController {
   @ApiOperation(value = "Search planet by id.")
   @RequestMapping(value = "planet/{id}", method = RequestMethod.GET)
   //TODO: Melhorar o nome do metodo
-  public ResponseEntity<Planet> findPlanetById(@PathVariable Integer id) {
-      Planet planet = planetService.findPlanetById(id);
-      return ResponseEntity.ok().body(planet);
+  public ResponseEntity<Optional<PlanetResponse>> findPlanetById(@PathVariable Integer id) {
+	  Optional<Planet> planet = Optional.ofNullable(planetService.findPlanetById(id));
+	  Optional<PlanetResponse> planetResponse = converter.ToPlanetResponse(planet.get());
+      return ResponseEntity.ok().body(planetResponse);
   }
 
   //TODO: Melhorar a especificaçao da descriçao
   @ApiOperation(value = "Search planet by name.")
   @RequestMapping(value = "planet/name/{name}", method = RequestMethod.GET)
   //TODO: Melhorar o nome do metodo
-  public ResponseEntity<Planet> findPlanetByParameter(@PathVariable String name) {
-      Planet planet = planetService.findPlanetByName(name);
-      return ResponseEntity.ok().body(planet);
+  public ResponseEntity<Optional<PlanetResponse>> findPlanetByParameter(@PathVariable String name) {
+	  Optional<Planet> planet = Optional.ofNullable(planetService.findPlanetByName(name));
+	  Optional<PlanetResponse> planetResponse = converter.ToPlanetResponse(planet.get());
+      return ResponseEntity.ok().body(planetResponse);
   }
       
   @ApiOperation(value = "Create planet")
@@ -82,19 +84,19 @@ public class PlanetController {
   @RequestMapping(path = "/planet", method = RequestMethod.POST)
   public ResponseEntity<Void> createPlanet(@Valid @RequestBody PlanetRequest planetRequest) {
 
-      Planet planet = planetConverter.planetRequestToPlanet(planetRequest);
+      Planet planet = converter.RequestToPlanet(planetRequest);
 
       planet = planetService.createPlanet(planet);
       URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
               .path("/{id}").buildAndExpand(planet.getId()).toUri();
       return ResponseEntity.created(uri).build();
   }
-
+  
   @ApiOperation(value = "Update planet")
   @RequestMapping(path = "/planet/{id}", method = RequestMethod.PUT)
   public ResponseEntity<Void> updatePlanet(@Valid @RequestBody PlanetRequest planetRequest, @PathVariable Integer id) {
       
-	  Planet planet = planetConverter.planetRequestToPlanet(planetRequest);
+	  Planet planet = converter.RequestToPlanet(planetRequest);
       
 	  planet.setId(id);
       planetService.updatePlanet(planet);

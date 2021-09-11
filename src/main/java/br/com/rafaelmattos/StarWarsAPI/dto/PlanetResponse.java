@@ -15,7 +15,6 @@ public class PlanetResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-
 	@NotEmpty(message = "Required completion")
 	@Length(min = 5, max = 80, message = "Length must be between 5 and 80 characters")
 	private String name;
