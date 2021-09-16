@@ -18,7 +18,7 @@ public class Converter {
 
 	}
 		
-	public List<PlanetResponse> ToPlanetResponse(Optional<List<Planet>> planets) {
+	public List<PlanetResponse> toPlanetResponse(Optional<List<Planet>> planets) {
 
 		if (planets.isPresent()) {
 
@@ -33,7 +33,7 @@ public class Converter {
 		return null;
 	}
 
-	public Page<PlanetResponse> ToPlanetResponse(Page<Planet> planets) {
+	public Page<PlanetResponse> toPlanetResponse(Page<Planet> planets) {
 		if (planets == null) {
 			return null;
 		}
@@ -42,7 +42,7 @@ public class Converter {
 		return planetsResponse;
 	}
 
-	public Planet RequestToPlanet(PlanetRequest planetRequest) {
+	public Planet requestToPlanet(PlanetRequest planetRequest) {
 
 		Planet planet = new Planet();
 
@@ -53,7 +53,7 @@ public class Converter {
 		return planet;
 	}
 	
-	public Optional<PlanetResponse> ToPlanetResponse(Planet planet) {
+	public Optional<PlanetResponse> toPlanetResponse(Planet planet) {
 
 		if (!(planet == null)) {
 			PlanetResponse planetResponse = new PlanetResponse();
@@ -69,20 +69,20 @@ public class Converter {
 		return null;
 	}
 		
-//	public Terrain RequestToTerrain(TerrainRequest terrainRequest) {
+//	public Terrain requestToTerrain(TerrainRequest terrainRequest) {
 //		Terrain terrain = new Terrain();
 //		terrain.setName(terrainRequest.getName());
 //		return terrain;
 //	}
 //	
-//	public Climate RequestToClimate(ClimateRequest climateRequest) {
+//	public Climate requestToClimate(ClimateRequest climateRequest) {
 //		Climate climate = new Climate();
 //		climate.setName(climateRequest.getName());
 //		return climate;
 //	}
 //
 //	
-//	public ClimateResponse ToClimateResponse(Climate climate) {
+//	public ClimateResponse toClimateResponse(Climate climate) {
 //		if (!(climate == null)) {
 //			ClimateResponse climateResponse = new ClimateResponse();
 //			climateResponse.setId(climate.getId());
@@ -92,7 +92,7 @@ public class Converter {
 //		return null;
 //	}
 //
-//	public TerrainResponse ToTerrainResponse(Terrain terrain) {
+//	public TerrainResponse toTerrainResponse(Terrain terrain) {
 //		if (!(terrain == null)) {
 //			TerrainResponse terrainResponse = new TerrainResponse();
 //			terrainResponse.setId(terrain.getId());

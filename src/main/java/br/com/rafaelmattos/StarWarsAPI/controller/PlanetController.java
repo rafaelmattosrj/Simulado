@@ -42,7 +42,7 @@ public class PlanetController {
   @RequestMapping(value = "planets",method = RequestMethod.GET)
   public ResponseEntity<Optional<List<PlanetResponse>>> findAllPlanets() {
 	  Optional<List<Planet>> planet = Optional.ofNullable(planetService.findAllPlanets());
-	  Optional<List<PlanetResponse>> planetResponse = Optional.ofNullable(converter.ToPlanetResponse(planet));
+	  Optional<List<PlanetResponse>> planetResponse = Optional.ofNullable(converter.toPlanetResponse(planet));
       return ResponseEntity.ok().body(planetResponse);
   }
   
@@ -55,7 +55,7 @@ public class PlanetController {
           @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
           @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
       Page<Planet> planet = planetService.findPage(page, linesPerPage, orderBy, direction);
-      Page<PlanetResponse> planetResponse = converter.ToPlanetResponse(planet);
+      Page<PlanetResponse> planetResponse = converter.toPlanetResponse(planet);
       return ResponseEntity.ok().body(planetResponse);
   }
   
@@ -65,7 +65,7 @@ public class PlanetController {
   //TODO: Melhorar o nome do metodo
   public ResponseEntity<Optional<PlanetResponse>> findPlanetById(@PathVariable Integer id) {
 	  Optional<Planet> planet = Optional.ofNullable(planetService.findPlanetById(id));
-	  Optional<PlanetResponse> planetResponse = converter.ToPlanetResponse(planet.get());
+	  Optional<PlanetResponse> planetResponse = converter.toPlanetResponse(planet.get());
       return ResponseEntity.ok().body(planetResponse);
   }
 
@@ -75,7 +75,7 @@ public class PlanetController {
   //TODO: Melhorar o nome do metodo
   public ResponseEntity<Optional<PlanetResponse>> findPlanetByParameter(@PathVariable String name) {
 	  Optional<Planet> planet = Optional.ofNullable(planetService.findPlanetByName(name));
-	  Optional<PlanetResponse> planetResponse = converter.ToPlanetResponse(planet.get());
+	  Optional<PlanetResponse> planetResponse = converter.toPlanetResponse(planet.get());
       return ResponseEntity.ok().body(planetResponse);
   }
       
@@ -84,7 +84,7 @@ public class PlanetController {
   @RequestMapping(path = "/planet", method = RequestMethod.POST)
   public ResponseEntity<Void> createPlanet(@Valid @RequestBody PlanetRequest planetRequest) {
 
-      Planet planet = converter.RequestToPlanet(planetRequest);
+      Planet planet = converter.requestToPlanet(planetRequest);
 
       planet = planetService.createPlanet(planet);
       URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -96,7 +96,7 @@ public class PlanetController {
   @RequestMapping(path = "/planet/{id}", method = RequestMethod.PUT)
   public ResponseEntity<Void> updatePlanet(@Valid @RequestBody PlanetRequest planetRequest, @PathVariable Integer id) {
       
-	  Planet planet = converter.RequestToPlanet(planetRequest);
+	  Planet planet = converter.requestToPlanet(planetRequest);
       
 	  planet.setId(id);
       planetService.updatePlanet(planet);

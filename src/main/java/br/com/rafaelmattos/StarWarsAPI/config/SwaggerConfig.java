@@ -45,6 +45,7 @@ public class SwaggerConfig {
 				.basePackage("br.com.rafaelmattos.StarWarsAPI.controller"))
 				.paths(PathSelectors.any())
 				.build()
+				.ignoredParameterTypes()
 				.apiInfo(apiInfo());
 	}
 
